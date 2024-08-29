@@ -7,9 +7,9 @@ All Posts
 
 <div class="container mt-5">
     <h1 class="mb-5 mt-5 text-center fw-bolder" >All Posts</h1>
-@if(session('destroyError'))
+@if(session('Error'))
         <div class="alert alert-danger">
-         {{session('destroyError')}}
+         {{session('Error')}}
     </div>
     @endif
     @if(session('success'))

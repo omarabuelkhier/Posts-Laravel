@@ -63,7 +63,12 @@ class PostController extends Controller
     public function show($id)
     {
         $post = post::findOrFail($id);
-        return view('posts.show', ['post' => $post]);
+
+        if (Auth::user()) {
+            return view('posts.show', ['post' => $post]);
+        }
+        return to_route('posts.index',compact('post'))->with('Error', 'Unauthorized, You Have to Login First');
+
     }
 
     /**
@@ -104,7 +109,7 @@ class PostController extends Controller
                 return to_route('posts.index', compact('post'))->with('success', 'Post Archived Successfully');;
 //            }
         }
-        return to_route('posts.index',compact('post'))->with('destroyError', 'Unauthorized, You cannot delete this post');
+        return to_route('posts.index',compact('post'))->with('Error', 'Unauthorized, You cannot delete this post');
 
     }
     public function hardDelete($id)

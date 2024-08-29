@@ -12,8 +12,11 @@ class StorepostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
-    }
+        if ($this->user()) {
+            return true;
+        }
+        return false;
+        }
 
     /**
      * Get the validation rules that apply to the request.
