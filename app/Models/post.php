@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Http\Requests\Comment;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,13 +15,14 @@ class post extends Model
  protected $fillable=['title','description','image','creator_id'];
     use HasFactory, SoftDeletes , Sluggable;
 
-public function creator(){
-    return $this->belongsTo(Creator::class,'creator_id');
+public function creator(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+{
+    return $this->belongsTo(User::class,'creator_id');
 }
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
+//    public function comments(): MorphMany
+//    {
+//        return $this->morphMany(Comment::class, 'commentable');
+//    }
 
 
 

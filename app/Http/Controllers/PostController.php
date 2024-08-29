@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use AllowDynamicProperties;
-use App\Models\Creator;
+use App\Models\User;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\post;
 use Illuminate\Http\Request;
@@ -24,9 +25,7 @@ class PostController extends Controller
     {
 
         $posts = post::paginate(3);
-        $creators = Creator::paginate(3);
-
-        return view('postsTask.index', compact('posts','creators'));
+        return view('posts.index', compact('posts'));
 
     }
 
@@ -35,10 +34,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        $creators = Creator::all();
         $post = post::all();
 
-        return view('postsTask.create', compact('creators','post'));
+        return view('posts.create', compact('post'));
     }
 
     /**
@@ -46,41 +44,17 @@ class PostController extends Controller
      */
     public function store(StorepostRequest $request)
     {
-//        request()->validate([
-//            'title' => 'required|min:3|unique:App\Models\post',
-//            'description' => ['required', 'string', 'min:3', 'max:255'],
-////            'creator' => ['required', 'string', 'min:3', 'max:255'],
-//             'image' => 'required|mimes:jpeg,png,jpg,gif|max:2048',
-//
-//        ]);
-//        $data = request()->all();
-//        $title = $data['title'];
-//        $description = $data['description'];
-        // $creator = $data['creator'];
-        // $creator = $data['image'];
-        // $created_at = $data['created_at'];// $date = Carbon::now();
-//        $postCreate = new post();
-//        $postCreate->title = $title;
-//        $postCreate->description = $description;
-        // $postCreate->creator = $creator;
-        // $postCreate->created_at = $created_at->format('l dS F o H:i:s A ');
-        // $postCreate->image = $request->file('image')->store('images/posts');
-//        $postCreate->save();
      $image_path=null;
      if($request->hasFile('image')){
          $image=$request->file('image');
          $image_path=$image->store('images','posts_upload');
 
      }
-//        $request_data=$request->only(['title', 'description', 'image']);
-
         $request_data=$request->all();
         $request_data['image']=$image_path;
-
-        $creators = Creator::all();
-
-       $post =post::create($request_data);
-        return to_route('postsTask.index', compact('post','creators'));
+        $request_data['creator_id']=Auth::id();
+        $post =post::create($request_data);
+        return to_route('posts.index', compact('post'));
     }
 
     /**
@@ -89,18 +63,17 @@ class PostController extends Controller
     public function show($id)
     {
         $post = post::findOrFail($id);
-        return view('postsTask.show', ['post' => $post]);
+        return view('posts.show', ['post' => $post]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request,string $id ,post $post)
+    public function edit($id): \Illuminate\Foundation\Application|Factory|\Illuminate\Contracts\View\View
     {
-        $creators = Creator::all();
 
         $post = post::findOrFail($id);
-        return view('postsTask.update',compact('post','creators'));
+        return view('posts.update',compact('post'));
     }
 
     /**
@@ -111,7 +84,6 @@ class PostController extends Controller
         request()->validate([
             'title' => 'required|min:3',
             'description' => 'required|string|min:3|max:255',
-//            'creator' => ['required', 'string', 'min:3', 'max:255'],
             'image' => 'required|mimes:jpeg,png,jpg,gif',
 
         ]);
@@ -136,26 +108,26 @@ class PostController extends Controller
         $description = $request['description'];
 
         $posts = post::findOrFail($id);
-        $creator = $posts->creator->creator;
+        $creator = $posts->creator->name;
 
         $posts->title = $title;
         $posts->description = $description;
-        $posts->creator->creator = $creator;
+        $posts->creator->name = $creator;
         $posts->image = $image_path;
 
         $posts->save();
 
-        return to_route('postsTask.index',['post' => $posts]);
+        return to_route('posts.index',['post' => $posts]);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function destroy($id )
     {
         $post = post::find($id);
-        $post->delete();
-        return to_route('postsTask.index');
+        if ($post->creator_id == Auth::id()) {
+            $post->delete();
+            return to_route('posts.index')->with('success', 'Post Archived Successfully');;
+        }
+        return to_route('posts.index')->with('destroyError', 'Unauthorized, You cannot delete this post');
+
     }
     public function hardDelete($id)
     {
@@ -164,23 +136,23 @@ class PostController extends Controller
         if (!($post == null)) {
 
             $post->forceDelete();
-            return to_route('postsTask.index');
+            return to_route('posts.index');
         }
 
-        return to_route('postsTask.index');
+        return to_route('posts.index');
     }
     public function archive()
     {
         $posts = post::onlyTrashed()->orderBy('created_at', 'desc')->get();
         // $post->delete();
-        return view('postsTask.archive', ['posts' => $posts]);
+        return view('posts.archive', ['posts' => $posts]);
     }
 
     public function restore($id)
     {
         $post = post::withTrashed()->findOrFail($id);
         $post->restore();
-        return to_route('postsTask.index');
+        return to_route('posts.index')->with('postRestored', 'Post Restored Successfully');
     }
 
 

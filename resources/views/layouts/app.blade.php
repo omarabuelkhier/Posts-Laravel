@@ -23,11 +23,11 @@
                 <a class="navbar-brand fw-bold fs-5" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
-                <a class="navbar-brand" href="/postsTask">
+                <a class="navbar-brand" href="/posts">
                     <img src="https://staging-ci.suez.edu.eg/wp-content/uploads/2022/08/iti-logo.png
                          " alt="Logo" width="30" height="45" class="d-inline-block align-text-top ">
                 </a>
-                <a class="nav-link active  fw-bold fs-5" aria-current="page" href="/postsTask">All Posts</a>
+                <a class="nav-link active  fw-bold fs-5" aria-current="page" href="/posts">All Posts</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

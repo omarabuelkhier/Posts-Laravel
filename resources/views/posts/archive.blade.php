@@ -20,19 +20,19 @@ Soft Deleted Posts
             <tr>
                 <td>{{$post->id}}</td>
                 <td>{{$post->title}}</td>
-                <td>{{$post->creator->creator}}</td>
-                <td>{{$post->image}}</td>
+                <td>{{$post->creator->name}}</td>
+                <td><img  src="{{asset('images/posts/'.$post->image)}}" width="150" height="150" /></td>
                 <td>{{$post->created_at->format('dS M Y H:i:s A')}}</td>
                 <td>{{$post->deleted_at->format('dS M Y H:i:s A')}}</td>
                 <td>
-                    <form action="{{route('postsTask.hardDelete', $post)}}" method="post">
+                    <form action="{{route('posts.hardDelete', $post)}}" method="post">
                         @csrf
                         @method('delete')
                         | <button type="submit" class="btn btn-danger mt-2"
                             onclick="return confirm('Are You Sure Want To Delete This Post Permanentley?')">Delete</button>
                         |
                     </form>
-                    <form action="{{route('postsTask.restore', $post)}}" method="post">
+                    <form action="{{route('posts.restore', $post)}}" method="post">
                         @csrf
                         | <button type="submit" class="btn btn-success mt-2"
                             onclick="return confirm('Are You Sure Want To Restore This Post?')">Restore</button>
@@ -44,7 +44,7 @@ Soft Deleted Posts
     </table>
 
 </div>
-<a href="{{route('postsTask.index')}}" class="btn btn-success w-25 fw-bolder fs-5 mt-5 mb-5" style="height: 2.5em;">
+<a href="{{route('posts.index')}}" class="btn btn-success w-25 fw-bolder fs-5 mt-5 mb-5" style="height: 2.5em;">
     All Posts</a>
 
 

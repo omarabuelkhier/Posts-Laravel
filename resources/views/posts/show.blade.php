@@ -14,8 +14,8 @@ Post Details
 <div class="card text-bg-secondary mb-3 w-25  ms-5 h-75">
     <div class="card-header fw-bolder">Post Creator Info</div>
     <div class="card-body">
-        <h5 class="text-start card-title fw-bold">Name:- <span> {{$post->creator->creator}}</span></h5>
-        <h5 class="text-start card-title fw-bold">Email:- <span> {{str_replace(' ', '', (strtolower($post->creator->creator)))}}@gmail.com</span> </h5>
+        <h5 class="text-start card-title fw-bold">Name:- <span> {{$post->creator->name}}</span></h5>
+        <h5 class="text-start card-title fw-bold">Email:- <span> {{$post->creator->email}}</span> </h5>
         <h5 class="text-start card-title fw-bold">Created at:- <span>
                 {{$post->created_at->format('dS M Y H:i:s A')}}</span>
         </h5>
@@ -33,11 +33,11 @@ Post Details
         <label for="exampleFormControlTextarea1" class="form-label fw-bolder">comment:</label>
         <textarea class="form-control" name="comment" id="exampleFormControlTextarea1" rows="3"></textarea>
         <div class="container text-center mt-2"></div>
-        <a href="{{route('postsTask.index')}}" class="btn btn-success w-25 text-center">Submit</a>
+        <a href="{{route('posts.index')}}" class="btn btn-success w-25 text-center">Submit</a>
     </div>
 </div>
 </div>
 <div class="col-12 text-center mt-5">
-    <a href="{{route('postsTask.index')}}" class="btn btn-success w-25">BACK TO ALL POSTS</a>
+    <a href="{{route('posts.index')}}" class="btn btn-success w-25">BACK TO ALL POSTS</a>
 </div>
 @endsection

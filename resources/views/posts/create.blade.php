@@ -3,7 +3,7 @@
 
 
 @section('content')
-<form action="{{route('postsTask.store')}}" method="post" enctype="multipart/form-data">
+<form action="{{route('posts.store')}}" method="post" enctype="multipart/form-data">
     @csrf
 
     <div class="container mt-5">
@@ -32,13 +32,10 @@
             @enderror
         </div>
         <div class="mb-3 text-start">
-            <label for="exampleFormControlInput1" class="form-label fw-bolder">Creator</label>
 
-            <select class="form-select" name="creator_id">
-                @foreach($creators as $creator)
-                    <option value="{{$creator->id}}">{{$creator->creator}}</option>
-                @endforeach
-            </select>
+                <label for="creator" class="form-label">Post Creator</label>
+                <input type="text" value="{{ Auth::user()->name }}" class="form-control" id="Creator" disabled>
+
             @error('creator')
             <span class="text-danger">{{ $message }}</span>
             @enderror

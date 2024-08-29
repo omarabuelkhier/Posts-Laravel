@@ -5,7 +5,7 @@ Post Creation
 
 
 @section('content')
-<form action="{{route('postsTask.update', $post)}}" method="POST" enctype="multipart/form-data">
+<form action="{{route('posts.update', $post)}}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div class="container mt-5">
@@ -33,18 +33,8 @@ Post Creation
             @enderror
         </div>
         <div class="text-start mb-3">
-            <label for="exampleFormControlInput1" class="form-label fw-bolder">Creator</label>
-
-
-            <select class="form-select" name="creator_id">
-                @foreach($creators as $creator)
-                    @if($creator->id==$post->creator_id)
-                        <option value="{{$creator->id}}" selected>{{$creator->creator}}</option>
-                    @else
-                        <option value="{{$creator->id}}">{{$creator->creator}}</option>
-                    @endif
-                @endforeach
-            </select>
+            <label for="creator" class="form-label">Post Creator</label>
+            <input type="text" value="{{$post->creator->name }}" class="form-control" id="Creator" disabled>
             @error('creator')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
