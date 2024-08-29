@@ -17,6 +17,11 @@ use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth')->except(['index']);
+    }
+
     /**
      * Display a listing of the resource.
      *

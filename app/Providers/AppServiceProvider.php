@@ -4,13 +4,11 @@ namespace App\Providers;
 
 use App\Models\post;
 use App\Models\User;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use App\Rules\Policies\PostPolicy;
 use Illuminate\Pagination\Paginator;
-use App\Policies\PostPolicy;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
-
-use PHPUnit\Event\TestRunner\BootstrapFinished;
 
 class AppServiceProvider extends ServiceProvider
 {
