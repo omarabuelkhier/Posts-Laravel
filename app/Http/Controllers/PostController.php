@@ -69,64 +69,42 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id): \Illuminate\Foundation\Application|Factory|\Illuminate\Contracts\View\View
+    public function edit(post $post): \Illuminate\Foundation\Application|Factory|\Illuminate\Contracts\View\View
     {
 
-        $post = post::findOrFail($id);
+//        $post = post::findOrFail($id);
         return view('posts.update',compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($id,UpdatepostRequest $request, post $posts)
+    public function update(UpdatepostRequest $request, post $post)
     {
-        request()->validate([
-            'title' => 'required|min:3',
-            'description' => 'required|string|min:3|max:255',
-            'image' => 'required|mimes:jpeg,png,jpg,gif',
-
-        ]);
-//        $image_path=$post->image;
-//        if($request->hasFile('image')){
-//            $image=$request->file('image');
-//            $image_path=$image->store('images','posts_upload');
-//
-//        }
-//        $request_data=$request->all();
-//        $request_data['image']=$image_path;
-//        // $date = Carbon::now();
-//        $post->update($request_data);
-
-        $image_path = $posts->image;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_path = $image->store('images', 'posts_upload');
+        $image_path=$post->image;
+        if($request->hasFile('image'))
+        {
+            $image=$request->file('image');
+            $image_path=$image->store('images','posts_upload');
         }
+        $request_data=$request->all();
+        $request_data['image']=$image_path;
+        $request_data['creator_id']=Auth::id();
+        $post->update($request_data);
 
-        $title = $request['title'];
-        $description = $request['description'];
-
-        $posts = post::findOrFail($id);
-        $creator = $posts->creator->name;
-
-        $posts->title = $title;
-        $posts->description = $description;
-        $posts->creator->name = $creator;
-        $posts->image = $image_path;
-
-        $posts->save();
-
-        return to_route('posts.index',['post' => $posts]);
+        return to_route('posts.index');
     }
-    public function destroy($id )
+    public function destroy($id,)
     {
         $post = post::find($id);
-        if ($post->creator_id == Auth::id()) {
-            $post->delete();
-            return to_route('posts.index')->with('success', 'Post Archived Successfully');;
+
+        if (Auth::id()==$post->creator_id) {
+//            if ($post->creator_id == Auth::id()) {
+                $post->delete();
+                return to_route('posts.index', compact('post'))->with('success', 'Post Archived Successfully');;
+//            }
         }
-        return to_route('posts.index')->with('destroyError', 'Unauthorized, You cannot delete this post');
+        return to_route('posts.index',compact('post'))->with('destroyError', 'Unauthorized, You cannot delete this post');
 
     }
     public function hardDelete($id)

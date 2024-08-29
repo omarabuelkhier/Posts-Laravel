@@ -49,8 +49,12 @@ All Posts
 {{--                <td>{{$post->created_at->format('dS M Y H:i:s A')}}</td>--}}
 
                 <td>
-                    | <x-button route="{{route('posts.show', $post)}}" color="primary" message="Show" /> |
-                      <x-button route="{{route('posts.edit', $post)}}" color="secondary" message="Edit" /> |
+                    | <x-button route="{{route('posts.show', $post)}}" color="primary" message="Show" />
+                    @can('update-post', $post)
+                        <!-- The current user can update the post... -->
+                        |  <x-button route="{{route('posts.edit', $post)}}" color="secondary" message="Edit" />
+                    @endcan
+                     |
                     <form action="{{route('posts.destroy', $post)}}" method="post">
                         @csrf
                         @method('delete')

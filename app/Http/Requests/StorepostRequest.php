@@ -23,10 +23,9 @@ class StorepostRequest extends FormRequest
     public function rules(): array
     {
         return [
-         //   'title' => 'required|min:3|unique:App\Models\post',
+//            'title' => 'required|min:3|unique:App\Models\post',
             'title' => ['required', 'min:3',new preventPost(),'unique:App\Models\post'],
             'description' => ['required', 'string', 'min:3', 'max:255'],
-          //  'creator' => [ 'string', 'min:3', 'max:255'],
             'image' => 'required|mimes:jpeg,png,jpg,gif',
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\preventPost;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatepostRequest extends FormRequest
 {
@@ -23,9 +24,8 @@ class UpdatepostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'min:3',new preventPost()],
+            'title' => ['required', 'min:3',Rule::unique('posts')->ignore($this->post),new preventPost()],
             'description' => ['required', 'string', 'min:3', 'max:255'],
-//            'creator' => ['required', 'string', 'min:3', 'max:255'],
             'image' => 'required|mimes:jpeg,png,jpg,gif',
         ];
     }
