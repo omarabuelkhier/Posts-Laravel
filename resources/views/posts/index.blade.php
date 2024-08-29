@@ -12,6 +12,11 @@ All Posts
          {{session('Error')}}
     </div>
     @endif
+    @if(session('errorMessage'))
+        <div class="alert alert-danger">
+            {{session('errorMessage')}}
+        </div>
+    @endif
     @if(session('success'))
         <div class="alert alert-success">
             {{session('success')}}
@@ -53,6 +58,8 @@ All Posts
                     @can('update-post', $post)
                         <!-- The current user can update the post... -->
                         |  <x-button route="{{route('posts.edit', $post)}}" color="secondary" message="Edit" />
+                    @else
+                        | UnAuthorized Action
                     @endcan
                      |
                     <form action="{{route('posts.destroy', $post)}}" method="post">

@@ -30,7 +30,7 @@ class PostController extends Controller
         $postValidator = Validator::make($request->all(),[
             'title' => ['required', 'min:3',new preventPost(),'unique:App\Models\post'],
             'description' => ['required', 'string', 'min:3', 'max:255'],
-            'image' => 'required|mimes:jpeg,png,jpg,gif',
+            'image' => 'mimes:jpeg,png,jpg,gif',
             'creator_id' => ['required', 'exists:App\Models\User,id'],
         ]);
          if($postValidator->fails()){
@@ -50,8 +50,6 @@ class PostController extends Controller
         }
         $request_data=$request->all();
         $request_data['image']=$image_path;
-        $authorized_id=(int)Auth::id();
-        $request_data['creator_id']=$authorized_id;
         $post=post::create($request_data);
         return new PostResource($post);
       }
@@ -73,7 +71,7 @@ class PostController extends Controller
         $postValidator = Validator::make($request->all(), [
             'title' => ['required', 'min:3', new preventPost(), Rule::unique('posts')->ignore($post)],
             'description' => ['required', 'string', 'min:3', 'max:255'],
-            'image' => 'required|mimes:jpeg,png,jpg,gif',
+            'image' => 'mimes:jpeg,png,jpg,gif',
             'creator_id' => ['required', 'exists:App\Models\User,id'],
         ]);
         if ($postValidator->fails()) {
@@ -93,8 +91,6 @@ class PostController extends Controller
         }
         $request_data=$request->all();
         $request_data['image']=$image_path;
-        $authorized_id=(int)Auth::id();
-        $request_data['creator_id']=  $authorized_id;
         $post->update($request_data);
         return new PostResource($post);
     }

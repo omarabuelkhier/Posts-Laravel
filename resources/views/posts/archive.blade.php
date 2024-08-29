@@ -20,7 +20,7 @@ Soft Deleted Posts
             <tr>
                 <td>{{$post->id}}</td>
                 <td>{{$post->title}}</td>
-                <td>{{$post->creator->name}}</td>
+{{--                <td>{{$post->creator->name? $post->creator->name:'none'}}</td>--}}
                 <td><img  src="{{asset('images/posts/'.$post->image)}}" width="150" height="150" /></td>
                 <td>{{$post->created_at->format('dS M Y H:i:s A')}}</td>
                 <td>{{$post->deleted_at->format('dS M Y H:i:s A')}}</td>

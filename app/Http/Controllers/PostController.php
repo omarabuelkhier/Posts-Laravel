@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StorepostRequest;
 use App\Http\Requests\UpdatepostRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 
@@ -81,9 +82,14 @@ class PostController extends Controller
      */
     public function edit(post $post): \Illuminate\Foundation\Application|Factory|\Illuminate\Contracts\View\View
     {
-
+        $posts = post::paginate(3);
 //        $post = post::findOrFail($id);
-        return view('posts.update',compact('post'));
+//        return view('posts.update',compact('post'));
+        if (Gate::allows('update-post', $post)) {
+            return view('posts.update',compact('post'));
+        } else {
+            return view('posts.index',compact('posts'))->with('errorMessage', 'Unauthorized, You cannot Update this post');
+        }
     }
 
     /**
@@ -102,13 +108,14 @@ class PostController extends Controller
         $request_data['creator_id']=Auth::id();
         $post->update($request_data);
 
-        return to_route('posts.index');
+
+        return to_route('posts.index')->with('success', 'Post Updated Successfully');
     }
     public function destroy($id,)
     {
         $post = post::find($id);
 
-        if (Auth::id()==$post->creator_id) {
+        if (Auth::user()->can('delete', $post)) {
 //            if ($post->creator_id == Auth::id()) {
                 $post->delete();
                 return to_route('posts.index', compact('post'))->with('success', 'Post Archived Successfully');;
